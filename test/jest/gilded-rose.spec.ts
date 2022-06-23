@@ -8,6 +8,7 @@ test("sulfuras should never change ", () => {
 });
 
 test("getItemType", () => {
+  const createStoreItem = () => {};
   expect(
     GildedRose.getItemType(new Item("Backstage passes - foo", 2, 10))
   ).toBe(ItemType.BACKSTAGE_PASSES);
@@ -20,6 +21,40 @@ test("getItemType", () => {
   expect(GildedRose.getItemType(new Item("Conjured - foo", 2, 10))).toBe(
     ItemType.CONJURED
   );
+});
+
+test("item quality never drops bellow 0", () => {
+  const createStoreItem = (name: string, quality: number) =>
+    new GildedRose([new Item(name, 2, quality)]).updateQuality()[0];
+
+  expect(createStoreItem("Backstage passes", 1).quality).toEqual(4);
+  expect(createStoreItem("Aged Brie", 1).quality).toEqual(2);
+  expect(createStoreItem("Sulfuras", 1).quality).toEqual(1);
+  expect(createStoreItem("Conjured", 1).quality).toEqual(0);
+
+  expect(createStoreItem("Backstage passes", 0).quality).toEqual(3);
+  expect(createStoreItem("Aged Brie", 0).quality).toEqual(1);
+  expect(createStoreItem("Sulfuras", 0).quality).toEqual(0);
+  expect(createStoreItem("Conjured", 0).quality).toEqual(0);
+});
+
+test("max item quality is 50", () => {
+  const createStoreItem = (name: string, quality: number) =>
+    new GildedRose([new Item(name, 2, quality)]).updateQuality()[0];
+
+  expect(createStoreItem("Backstage passes", 55).quality).toEqual(50);
+  expect(createStoreItem("Aged Brie", 55).quality).toEqual(50);
+  // expect(createStoreItem("Sulfuras", 55).quality).toEqual(50);
+  expect(createStoreItem("Conjured", 55).quality).toEqual(50);
+});
+
+test("min item quality is 0", () => {
+  const createStoreItem = (name: string, quality: number) =>
+    new GildedRose([new Item(name, 2, quality)]).updateQuality()[0];
+  expect(createStoreItem("Backstage passes", -10).quality).toEqual(0);
+  expect(createStoreItem("Aged Brie", -10).quality).toEqual(0);
+  // expect(createStoreItem("Sulfuras", -10).quality).toEqual(0);
+  expect(createStoreItem("Conjured", -10).quality).toEqual(0);
 });
 
 // "Once the sell by date has passed, Quality degrades twice as fast"
