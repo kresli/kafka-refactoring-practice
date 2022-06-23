@@ -50,6 +50,8 @@ export class GildedRose {
           break;
         }
         case ItemType.CONJURED: {
+          item.quality -= 2;
+          item.sellIn -= 1;
           break;
         }
         default: {

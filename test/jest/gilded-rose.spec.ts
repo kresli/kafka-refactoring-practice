@@ -105,7 +105,16 @@ test(`"Backstage passes" quality drops to 0 after the concert`, () => {
   ]);
 });
 
-test(`"Conjured" items degrade in Quality twice as fast as normal items`, () => {});
+test(`"Conjured" items degrade in Quality twice as fast as normal items`, () => {
+  const store = new GildedRose([new Item("Conjured", 2, 10)]);
+  expect(store.updateQuality()).toEqual([
+    {
+      name: "Conjured",
+      sellIn: 1,
+      quality: 8,
+    },
+  ]);
+});
 
 // REST
 
