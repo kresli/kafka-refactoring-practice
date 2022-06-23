@@ -1,10 +1,25 @@
 // https://github.com/emilybache/GildedRose-Refactoring-Kata/blob/main/GildedRoseRequirements.txt
-import { Item, GildedRose } from "@/gilded-rose";
+import { Item, GildedRose, ItemType } from "@/gilded-rose";
 
 test("sulfuras should never change ", () => {
   const name = "Sulfuras, Hand of Ragnaros";
   const shop = new GildedRose([new Item(name, 2, 10)]);
   expect(shop.updateQuality()).toEqual([{ name, sellIn: 2, quality: 10 }]);
+});
+
+test("getItemType", () => {
+  expect(
+    GildedRose.getItemType(new Item("Backstage passes - foo", 2, 10))
+  ).toBe(ItemType.BACKSTAGE_PASSES);
+  expect(GildedRose.getItemType(new Item("Aged Brie  - foo", 2, 10))).toBe(
+    ItemType.AGED_BRIE
+  );
+  expect(GildedRose.getItemType(new Item("Sulfuras - foo", 2, 10))).toBe(
+    ItemType.SULFURAS
+  );
+  expect(GildedRose.getItemType(new Item("Conjured - foo", 2, 10))).toBe(
+    ItemType.CONJURED
+  );
 });
 
 // "Once the sell by date has passed, Quality degrades twice as fast"
