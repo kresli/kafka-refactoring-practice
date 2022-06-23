@@ -34,36 +34,29 @@ export class GildedRose {
     for (const item of this.items) {
       const type = GildedRose.getItemType(item);
 
-      if (type === ItemType.SULFURAS) continue;
-
-      item.sellIn -= 1;
-
-      if (type != ItemType.AGED_BRIE && type != ItemType.BACKSTAGE_PASSES) {
-        item.quality -= 1;
-      } else {
-        item.quality += 1;
-        if (type == ItemType.BACKSTAGE_PASSES) {
-          if (item.sellIn < 11) {
-            item.quality += 1;
-          }
-          if (item.sellIn < 6) {
-            item.quality += 1;
-          }
+      switch (type) {
+        case ItemType.SULFURAS: {
+          break;
         }
-      }
-
-      if (item.sellIn < 0) {
-        if (type != ItemType.AGED_BRIE) {
-          if (type != ItemType.BACKSTAGE_PASSES) {
-            item.quality -= 1;
-          } else {
-            item.quality = 0;
-          }
-        } else {
+        case ItemType.AGED_BRIE:
           item.quality += 1;
+          item.sellIn -= 1;
+          break;
+        case ItemType.BACKSTAGE_PASSES: {
+          const { sellIn } = item;
+          item.quality +=
+            sellIn > 10 ? 1 : sellIn > 5 ? 2 : sellIn > 0 ? 3 : -item.quality;
+          item.sellIn -= 1;
+          break;
+        }
+        case ItemType.CONJURED: {
+          break;
+        }
+        default: {
+          item.sellIn -= 1;
+          item.quality -= item.sellIn >= 0 ? 1 : 2;
         }
       }
-
       item.quality = item.quality >= 50 ? 50 : item.quality;
       item.quality = item.quality <= 0 ? 0 : item.quality;
     }

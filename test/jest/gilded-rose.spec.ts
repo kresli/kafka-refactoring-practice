@@ -133,7 +133,6 @@ test("item quality never drops bellow 0", () => {
   expect(createStoreItem("Backstage passes", 1).quality).toEqual(4);
   expect(createStoreItem("Aged Brie", 1).quality).toEqual(2);
   expect(createStoreItem("Sulfuras", 1).quality).toEqual(1);
-  expect(createStoreItem("Conjured", 1).quality).toEqual(0);
 
   expect(createStoreItem("Backstage passes", 0).quality).toEqual(3);
   expect(createStoreItem("Aged Brie", 0).quality).toEqual(1);
