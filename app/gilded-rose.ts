@@ -10,7 +10,20 @@ export class Item {
   }
 }
 
+export enum ItemType {
+  BACKSTAGE_PASSES = "Backstage passes",
+  AGED_BRIE = "Aged Brie",
+  SULFURAS = "Sulfuras",
+  CONJURED = "Conjured",
+}
+
 export class GildedRose {
+  static getItemType(item: Item) {
+    return Object.entries(ItemType).find(([key, type]) =>
+      item.name.startsWith(type)
+    )?.[1];
+  }
+
   items: Array<Item>;
 
   constructor(items = [] as Array<Item>) {
@@ -20,7 +33,10 @@ export class GildedRose {
   updateQuality() {
     for (const item of this.items) {
       if (item.name === "Sulfuras, Hand of Ragnaros") continue;
+      const type = GildedRose.getItemType(item);
+
       item.sellIn = item.sellIn - 1;
+
       if (
         item.name != "Aged Brie" &&
         item.name != "Backstage passes to a TAFKAL80ETC concert"
