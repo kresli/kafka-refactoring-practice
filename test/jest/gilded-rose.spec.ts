@@ -8,19 +8,14 @@ test("sulfuras should never change ", () => {
 });
 
 test("getItemType", () => {
-  const createStoreItem = () => {};
-  expect(
-    GildedRose.getItemType(new Item("Backstage passes - foo", 2, 10))
-  ).toBe(ItemType.BACKSTAGE_PASSES);
-  expect(GildedRose.getItemType(new Item("Aged Brie  - foo", 2, 10))).toBe(
-    ItemType.AGED_BRIE
+  const makeItemType = (name: string) =>
+    GildedRose.getItemType(new Item(name, 2, 10));
+  expect(makeItemType("Backstage passes - foo")).toBe(
+    ItemType.BACKSTAGE_PASSES
   );
-  expect(GildedRose.getItemType(new Item("Sulfuras - foo", 2, 10))).toBe(
-    ItemType.SULFURAS
-  );
-  expect(GildedRose.getItemType(new Item("Conjured - foo", 2, 10))).toBe(
-    ItemType.CONJURED
-  );
+  expect(makeItemType("Aged Brie  - foo")).toBe(ItemType.AGED_BRIE);
+  expect(makeItemType("Sulfuras - foo")).toBe(ItemType.SULFURAS);
+  expect(makeItemType("Conjured - foo")).toBe(ItemType.CONJURED);
 });
 
 test("item quality never drops bellow 0", () => {
