@@ -1,5 +1,113 @@
-// https://github.com/emilybache/GildedRose-Refactoring-Kata/blob/main/GildedRoseRequirements.txt
 import { Item, GildedRose, ItemType } from "@/gilded-rose";
+
+// full design tests
+// https://github.com/emilybache/GildedRose-Refactoring-Kata/blob/main/GildedRoseRequirements.txt
+
+test("Once the sell by date has passed, Quality degrades twice as fast", () => {
+  const store = new GildedRose([new Item("foo", 1, 9)]);
+  expect(store.items).toEqual([{ name: "foo", sellIn: 1, quality: 9 }]);
+  expect(store.updateQuality()).toEqual([
+    { name: "foo", sellIn: 0, quality: 8 },
+  ]);
+  expect(store.updateQuality()).toEqual([
+    { name: "foo", sellIn: -1, quality: 6 },
+  ]);
+});
+
+test("The Quality of an item is never negative", () => {
+  const store = new GildedRose([new Item("foo", 0, 0)]);
+  expect(store.updateQuality()).toEqual([
+    { name: "foo", sellIn: -1, quality: 0 },
+  ]);
+});
+
+test(`"Aged Brie" actually increases in Quality the older it gets`, () => {
+  const store = new GildedRose([new Item("Aged Brie", 3, 0)]);
+  expect(store.updateQuality()).toEqual([
+    { name: "Aged Brie", sellIn: 2, quality: 1 },
+  ]);
+});
+
+test("The Quality of an item is never more than 50", () => {
+  const store = new GildedRose([new Item("Aged Brie", 3, 50)]);
+  expect(store.updateQuality()).toEqual([
+    { name: "Aged Brie", sellIn: 2, quality: 50 },
+  ]);
+});
+
+test(`"Sulfuras", being a legendary item, never has to be sold or decreases in Quality`, () => {
+  const store = new GildedRose([new Item("Sulfuras, Hand of Ragnaros", 3, 2)]);
+  expect(store.updateQuality()).toEqual([
+    { name: "Sulfuras, Hand of Ragnaros", sellIn: 3, quality: 2 },
+  ]);
+});
+
+test(`"Backstage passes" increases in Quality as its SellIn value approaches`, () => {
+  const store = new GildedRose([
+    new Item("Backstage passes to a TAFKAL80ETC concert", 12, 0),
+  ]);
+  expect(store.updateQuality()).toEqual([
+    {
+      name: "Backstage passes to a TAFKAL80ETC concert",
+      sellIn: 11,
+      quality: 1,
+    },
+  ]);
+});
+test(`"Backstage passes" Quality increases by 2 when there are 10 days or less`, () => {
+  const store = new GildedRose([
+    new Item("Backstage passes to a TAFKAL80ETC concert", 10, 0),
+  ]);
+  expect(store.updateQuality()).toEqual([
+    {
+      name: "Backstage passes to a TAFKAL80ETC concert",
+      sellIn: 9,
+      quality: 2,
+    },
+  ]);
+  expect(store.updateQuality()).toEqual([
+    {
+      name: "Backstage passes to a TAFKAL80ETC concert",
+      sellIn: 8,
+      quality: 4,
+    },
+  ]);
+});
+test(`"Backstage passes" Quality increases by 3 when there are 5 days or less`, () => {
+  const store = new GildedRose([
+    new Item("Backstage passes to a TAFKAL80ETC concert", 5, 0),
+  ]);
+  expect(store.updateQuality()).toEqual([
+    {
+      name: "Backstage passes to a TAFKAL80ETC concert",
+      sellIn: 4,
+      quality: 3,
+    },
+  ]);
+  expect(store.updateQuality()).toEqual([
+    {
+      name: "Backstage passes to a TAFKAL80ETC concert",
+      sellIn: 3,
+      quality: 6,
+    },
+  ]);
+});
+test(`"Backstage passes" quality drops to 0 after the concert`, () => {
+  const store = new GildedRose([
+    new Item("Backstage passes to a TAFKAL80ETC concert", 0, 10),
+  ]);
+  expect(store.updateQuality()).toEqual([
+    {
+      name: "Backstage passes to a TAFKAL80ETC concert",
+      sellIn: -1,
+      quality: 0,
+    },
+  ]);
+});
+
+test(`"Conjured" items degrade in Quality twice as fast as normal items`, () => {});
+
+// REST
 
 test("sulfuras should never change ", () => {
   const name = "Sulfuras, Hand of Ragnaros";
@@ -51,19 +159,3 @@ test("min item quality is 0", () => {
   // expect(createStoreItem("Sulfuras", -10).quality).toEqual(0);
   expect(createStoreItem("Conjured", -10).quality).toEqual(0);
 });
-
-// "Once the sell by date has passed, Quality degrades twice as fast"
-
-// The Quality of an item is never negative
-
-// "Aged Brie" actually increases in Quality the older it gets
-
-// The Quality of an item is never more than 50
-
-// "Sulfuras", being a legendary item, never has to be sold or decreases in Quality
-
-// "Backstage passes", like aged brie, increases in Quality as its SellIn value approaches;
-// Quality increases by 2 when there are 10 days or less and by 3 when there are 5 days or less but
-// Quality drops to 0 after the concert
-
-// "Conjured" items degrade in Quality twice as fast as normal items

@@ -38,18 +38,6 @@ export class GildedRose {
 
       item.sellIn -= 1;
 
-      if (item.sellIn < 0) {
-        if (type != ItemType.AGED_BRIE) {
-          if (type != ItemType.BACKSTAGE_PASSES) {
-            item.quality -= 1;
-          } else {
-            item.quality = 0;
-          }
-        } else {
-          item.quality += 1;
-        }
-      }
-
       if (type != ItemType.AGED_BRIE && type != ItemType.BACKSTAGE_PASSES) {
         item.quality -= 1;
       } else {
@@ -61,6 +49,18 @@ export class GildedRose {
           if (item.sellIn < 6) {
             item.quality += 1;
           }
+        }
+      }
+
+      if (item.sellIn < 0) {
+        if (type != ItemType.AGED_BRIE) {
+          if (type != ItemType.BACKSTAGE_PASSES) {
+            item.quality -= 1;
+          } else {
+            item.quality = 0;
+          }
+        } else {
+          item.quality += 1;
         }
       }
 
