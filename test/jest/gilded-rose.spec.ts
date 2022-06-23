@@ -1,6 +1,12 @@
 // https://github.com/emilybache/GildedRose-Refactoring-Kata/blob/main/GildedRoseRequirements.txt
 import { Item, GildedRose } from "@/gilded-rose";
 
+test("sulfuras should never change ", () => {
+  const name = "Sulfuras, Hand of Ragnaros";
+  const shop = new GildedRose([new Item(name, 2, 10)]);
+  expect(shop.updateQuality()).toEqual([{ name, sellIn: 2, quality: 10 }]);
+});
+
 // "Once the sell by date has passed, Quality degrades twice as fast"
 
 // The Quality of an item is never negative
